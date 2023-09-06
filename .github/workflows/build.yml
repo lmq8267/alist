@@ -42,7 +42,7 @@ jobs:
           nameserver 8.8.8.8 
           nameserver 4.4.4.4
           EOF
-          wget -o "alist-linux-musl-mipsle.tar.gz" "https://github.com/alist-org/alist/releases/download/$tag/alist-linux-musl-mipsle.tar.gz" 
+          curl -o "alist-linux-musl-mipsle.tar.gz" "https://github.com/alist-org/alist/releases/download/${{tag}}/alist-linux-musl-mipsle.tar.gz" 
           tar -xzvf alist-linux-musl-mipsle.tar.gz -C /opt/st
           tar -xvf /opt/st/upx-3.95-amd64_linux.tar.xz -C /opt
           chmod 777 /opt/upx-3.95-amd64_linux/upx
