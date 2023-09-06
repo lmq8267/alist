@@ -34,19 +34,23 @@ jobs:
         run: |
           rm -rf /opt/st
           git clone https://github.com/lmq8267/cloudflared.git /opt/st
-          cd /opt/st
-          tag=`curl https://api.github.com/repos/alist-org/alist/releases/latest | grep 'tag_name' | cut -d\" -f4`
-          echo tag=$tag
+          git clone https://github.com/lmq8267/cloudflared.git /opt/ali
+          cd /opt/ali
+          #tag=`curl https://api.github.com/repos/alist-org/alist/releases/latest | grep 'tag_name' | cut -d\" -f4`
+          #echo tag=$tag
           sudo chmod 0777 /etc/resolv.conf
           cat >>/etc/resolv.conf <<EOF
           nameserver 8.8.8.8 
           nameserver 4.4.4.4
           EOF
-          curl -o "alist-linux-musl-mipsle.tar.gz" "https://github.com/alist-org/alist/releases/download/${{tag}}/alist-linux-musl-mipsle.tar.gz" 
-          tar -xzvf alist-linux-musl-mipsle.tar.gz -C /opt/st
+          #curl -o "alist-linux-musl-mipsle.tar.gz" "https://github.com/alist-org/alist/releases/download/${{tag}}/alist-linux-musl-mipsle.tar.gz" 
+          #tar -xzvf alist-linux-musl-mipsle.tar.gz -C /opt/st
           tar -xvf /opt/st/upx-3.95-amd64_linux.tar.xz -C /opt
           chmod 777 /opt/upx-3.95-amd64_linux/upx
           chmod 777 /opt/st/strip
+          chmod 777 /opt/ali/up.sh
+          /opt/ali/up.sh
+          cd /opt/st
           /opt/st/strip alist
           /opt/upx-3.95-amd64_linux/upx --lzma --best alist
           tar czvf alist.tar.gz alist
