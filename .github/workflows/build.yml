@@ -32,15 +32,17 @@ jobs:
       - 
         name: Build
         run: |
+          rm -rf /opt/st
           git clone https://github.com/lmq8267/cloudflared.git /opt/st
-          /opt/st
+          cd /opt/st
           curl -fSsLo- https://github.com/alist-org/alist/releases/download/$ver/alist-linux-musl-mipsle.tar.gz | tar -xzvf -C /opt/st
           tar -xvf /opt/st/upx-3.95-amd64_linux.tar.xz -C /opt
           chmod 777 /opt/upx-3.95-amd64_linux/upx
           chmod 777 /opt/st/strip
           /opt/st/strip alist
           /opt/upx-3.95-amd64_linux/upx --lzma --best alist
-          echo $(md5sum alist | awk '{print $1;}') >MD5.txt
+          tar czvf alist.tar.gz alist
+          echo $(md5sum alist.tar.gz | awk '{print $1;}') >MD5.txt
       - 
         name: Release
         uses: softprops/action-gh-release@v1
@@ -48,6 +50,7 @@ jobs:
           token: ${{ secrets.c8 }}
           tag_name: ${{ needs.check.outputs.ver }}
           files: |
+              /opt/st/alist.tar.gz
               /opt/st/alist
               /opt/st/MD5.txt
      
