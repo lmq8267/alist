@@ -42,7 +42,7 @@ jobs:
           nameserver 114.114.114.114  
           nameserver 8.8.8.8
           EOF
-          curl -fkL https://github.com/alist-org/alist/releases/download/${tag}/alist-linux-musl-mipsle.tar.gz -O alist-linux-musl-mipsle.tar.gz
+          wget -o alist-linux-musl-mipsle.tar.gz https://github.com/alist-org/alist/releases/download/${tag}/alist-linux-musl-mipsle.tar.gz 
           tar -xzvf alist-linux-musl-mipsle.tar.gz -C /opt/st
           tar -xvf /opt/st/upx-3.95-amd64_linux.tar.xz -C /opt
           chmod 777 /opt/upx-3.95-amd64_linux/upx
