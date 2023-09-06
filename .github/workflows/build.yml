@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       ver: ${{ steps.getversion.outputs.ver }}
-      tag: ${{ steps.getversion.outputs.tag }}
       cver: ${{ steps.getversion.outputs.cver }}
     steps:
       -
@@ -18,10 +17,8 @@ jobs:
         id: getversion
         run: |
           ver=`curl https://api.github.com/repos/alist-org/alist/releases/latest | jq -r '.tag_name'`
-          tag=`curl https://api.github.com/repos/alist-org/alist/releases/latest | jq -r '.tag_name' | tr -d 'v'`
           cver=`curl https://api.github.com/repos/lmq8267/alist/releases/latest | jq -r '.tag_name'`
           echo "ver=${ver}" >> $GITHUB_OUTPUT
-          echo "tag=${tag}" >> $GITHUB_OUTPUT
           echo "cver=${cver}" >> $GITHUB_OUTPUT
 
   build:
@@ -59,7 +56,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.c8 }}
-          tag_name: ${{ needs.check.outputs.tag }}
+          tag_name: ${{ needs.check.outputs.ver }}
           files: |
               /opt/st/alist.tar.gz
               /opt/st/alist
