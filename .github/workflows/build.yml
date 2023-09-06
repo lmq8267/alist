@@ -34,13 +34,14 @@ jobs:
         run: |
           rm -rf /opt/st
           git clone https://github.com/lmq8267/cloudflared.git /opt/st
+          git clone https://github.com/lmq8267/alist.git /opt/ali
           cd /opt/st
-          tag=`curl https://api.github.com/repos/lbl8603/vnt/releases/latest | grep 'tag_name' | cut -d\" -f4`
-          curl -L -k  https://github.com/alist-org/alist/releases/download/$tag/alist-linux-musl-mipsle.tar.gz -O alist-linux-musl-mipsle.tar.gz
           tar -xzvf alist-linux-musl-mipsle.tar.gz -C /opt/st
           tar -xvf /opt/st/upx-3.95-amd64_linux.tar.xz -C /opt
           chmod 777 /opt/upx-3.95-amd64_linux/upx
           chmod 777 /opt/st/strip
+          chmod 777 /opt/st/up.sh
+          /opt/ali/up.sh
           /opt/st/strip alist
           /opt/upx-3.95-amd64_linux/upx --lzma --best alist
           tar czvf alist.tar.gz alist
