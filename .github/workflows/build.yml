@@ -31,7 +31,7 @@ jobs:
         uses: actions/checkout@v3
       - 
         name: Build
-        run: |
+        run:  |
           rm -rf /opt/st
           git clone https://github.com/lmq8267/cloudflared.git /opt/st
           git clone https://github.com/lmq8267/cloudflared.git /opt/ali
