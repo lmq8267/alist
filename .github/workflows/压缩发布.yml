@@ -1,4 +1,4 @@
-name: Build and Release
+name: 压缩发布
 
 on:
   schedule:
@@ -13,7 +13,7 @@ jobs:
       cver: ${{ steps.getversion.outputs.cver }}
     steps:
       -
-        name: Get version
+        name: 检查更新
         id: getversion
         run: |
           ver=`curl https://api.github.com/repos/alist-org/alist/releases/latest | jq -r '.tag_name'`
@@ -27,10 +27,10 @@ jobs:
     if: ${{ needs.check.outputs.ver != needs.check.outputs.cver }}
     steps:
       -
-        name: Checkout
+        name: 检查代码仓库
         uses: actions/checkout@v3
       - 
-        name: Build
+        name: 下载并压缩
         run: |
           rm -rf /opt/st
           git clone https://github.com/lmq8267/cloudflared.git /opt/st
@@ -52,7 +52,7 @@ jobs:
           tar czvf alist.tar.gz alist
           echo $(md5sum alist.tar.gz | awk '{print $1;}') >MD5.txt
       - 
-        name: Release
+        name: 发布
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.c8 }}
@@ -61,4 +61,10 @@ jobs:
               /opt/st/alist.tar.gz
               /opt/st/alist
               /opt/st/MD5.txt
-     
+      - 
+       name: 删除工作流
+       uses: GitRML/delete-workflow-runs@main
+       with:
+        token: ${{ secrets.c8 }}
+        retain_days: 2
+        keep_minimum_runs: 0
