@@ -51,6 +51,22 @@ jobs:
           /opt/upx-3.95-amd64_linux/upx --lzma --best alist
           tar czvf alist.tar.gz alist
           echo $(md5sum alist.tar.gz | awk '{print $1;}') >MD5.txt
+      - name: 设置机器人
+        run : |
+         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+         git config --global user.name "github-actions[bot]"
+         sudo timedatectl set-timezone "Asia/Shanghai"
+      - name: 上传
+        run: |
+          git clone https://github.com/lmq8267/alist.git /opt/alis
+          [ ! -d "/opt/alis/install/${{ needs.check.outputs.ver }}" ] && mkdir -p "/opt/alis/install/${{ needs.check.outputs.ver }}"
+          cp -rf /opt/st/alist.tar.gz "/opt/alis/install/${{ needs.check.outputs.ver }}/alist.tar.gz"
+          cp -rf /opt/st/alist "/opt/alis/install/${{ needs.check.outputs.ver }}/alist"
+          cp -rf /opt/st/MD5.txt "/opt/alis/install/${{ needs.check.outputs.tag }}/MD5.txt"
+          cd /opt/alis
+          git add .
+          git commit -am "${{ needs.check.outputs.ver }} 更新时间： $(date '+%Y-%m-%d %H:%M:%S')"
+          git push --quiet "https://${{ secrets.c8 }}@github.com/lmq8267/alist.git"
       - 
         name: 发布
         uses: softprops/action-gh-release@v1
