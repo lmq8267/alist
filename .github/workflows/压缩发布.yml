@@ -62,7 +62,7 @@ jobs:
           [ ! -d "/opt/alis/install/${{ needs.check.outputs.ver }}" ] && mkdir -p "/opt/alis/install/${{ needs.check.outputs.ver }}"
           cp -rf /opt/st/alist.tar.gz "/opt/alis/install/${{ needs.check.outputs.ver }}/alist.tar.gz"
           cp -rf /opt/st/alist "/opt/alis/install/${{ needs.check.outputs.ver }}/alist"
-          cp -rf /opt/st/MD5.txt "/opt/alis/install/${{ needs.check.outputs.ver }}/MD5.txt"
+          echo $(md5sum /opt/st/alist | awk '{print $1;}') >"/opt/alis/install/${{ needs.check.outputs.ver }}/MD5.txt"
           cd /opt/alis
           git add .
           git commit -am "${{ needs.check.outputs.ver }} 更新时间： $(date '+%Y-%m-%d %H:%M:%S')"
