@@ -4,6 +4,8 @@ on:
   schedule:
     - cron: '0 3,20 * * *'
   workflow_dispatch:
+env:
+  TZ: Asia/Shanghai
 
 jobs:
   check:
@@ -67,11 +69,13 @@ jobs:
           git add .
           git commit -am "${{ needs.check.outputs.ver }} 更新时间： $(date '+%Y-%m-%d %H:%M:%S')"
           git push --quiet "https://${{ secrets.c8 }}@github.com/lmq8267/alist.git"
+          echo "build_time=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
       - 
         name: 发布
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.c8 }}
+          body: 上传时间 ：${{ env.build_time }}
           tag_name: ${{ needs.check.outputs.ver }}
           files: |
               /opt/st/alist.tar.gz
