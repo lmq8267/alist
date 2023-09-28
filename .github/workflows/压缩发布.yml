@@ -78,7 +78,7 @@ jobs:
           body: |
            > ### 上传时间 ：${{ env.build_time }}
 
-           ** [官方更新说明](https://github.com/alist-org/alist/releases)
+           ** [官方更新说明](https://github.com/alist-org/alist/releases)**
           tag_name: ${{ needs.check.outputs.ver }}
           files: |
               /opt/st/alist.tar.gz
