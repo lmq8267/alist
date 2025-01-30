@@ -83,6 +83,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           force_with_lease: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       - 
         name: 发布
         uses: softprops/action-gh-release@v2
