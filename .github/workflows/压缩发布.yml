@@ -73,6 +73,7 @@ jobs:
           cp -rf /opt/st/alist.tar.gz "install/${{ needs.check.outputs.ver }}/alist.tar.gz"
           cp -rf /opt/st/alist "install/${{ needs.check.outputs.ver }}/alist"
           echo $(md5sum /opt/st/alist | awk '{print $1;}') >"install/${{ needs.check.outputs.ver }}/MD5.txt"
+          git add .
           git commit -am "${{ needs.check.outputs.ver }} 更新时间： $(date '+%Y-%m-%d %H:%M:%S')"
           #git push --quiet "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
           echo "build_time=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
