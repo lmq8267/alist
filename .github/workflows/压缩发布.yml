@@ -36,6 +36,9 @@ jobs:
     needs: check
     if: ${{ needs.check.outputs.ver != needs.check.outputs.cver }}
     steps:
+      -
+        name: 检查代码仓库
+        uses: actions/checkout@v4
       - 
         name: 下载并压缩
         run: |
@@ -66,16 +69,17 @@ jobs:
          sudo timedatectl set-timezone "Asia/Shanghai"
       - name: 上传
         run: |
-          git clone https://github.com/${{ github.repository }}.git /opt/alis
-          [ ! -d "/opt/alis/install/${{ needs.check.outputs.ver }}" ] && mkdir -p "/opt/alis/install/${{ needs.check.outputs.ver }}"
-          cp -rf /opt/st/alist.tar.gz "/opt/alis/install/${{ needs.check.outputs.ver }}/alist.tar.gz"
-          cp -rf /opt/st/alist "/opt/alis/install/${{ needs.check.outputs.ver }}/alist"
-          echo $(md5sum /opt/st/alist | awk '{print $1;}') >"/opt/alis/install/${{ needs.check.outputs.ver }}/MD5.txt"
-          cd /opt/alis
-          git add .
+          [ ! -d "install/${{ needs.check.outputs.ver }}" ] && mkdir -p "install/${{ needs.check.outputs.ver }}"
+          cp -rf /opt/st/alist.tar.gz "install/${{ needs.check.outputs.ver }}/alist.tar.gz"
+          cp -rf /opt/st/alist "install/${{ needs.check.outputs.ver }}/alist"
+          echo $(md5sum /opt/st/alist | awk '{print $1;}') >"install/${{ needs.check.outputs.ver }}/MD5.txt"
           git commit -am "${{ needs.check.outputs.ver }} 更新时间： $(date '+%Y-%m-%d %H:%M:%S')"
-          git push --quiet "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          #git push --quiet "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
           echo "build_time=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          force_with_lease: true
       - 
         name: 发布
         uses: softprops/action-gh-release@v2
@@ -84,7 +88,7 @@ jobs:
           body: |
            > ### 上传时间 ：${{ env.build_time }}
 
-           ** [官方更新说明](https://github.com/AlistGo/alist/releases)**
+           **[官方更新说明](https://github.com/AlistGo/alist/releases)**
           tag_name: ${{ needs.check.outputs.ver }}
           files: |
               /opt/st/alist.tar.gz
