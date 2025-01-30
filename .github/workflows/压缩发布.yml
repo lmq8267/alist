@@ -36,9 +36,6 @@ jobs:
     needs: check
     if: ${{ needs.check.outputs.ver != needs.check.outputs.cver }}
     steps:
-      -
-        name: 检查代码仓库
-        uses: actions/checkout@v4
       - 
         name: 下载并压缩
         run: |
@@ -77,13 +74,8 @@ jobs:
           cd /opt/alis
           git add .
           git commit -am "${{ needs.check.outputs.ver }} 更新时间： $(date '+%Y-%m-%d %H:%M:%S')"
-          #git push --quiet "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          git push --quiet "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
           echo "build_time=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          force_with_lease: true
-          github_token: ${{ secrets.GITHUB_TOKEN }}
       - 
         name: 发布
         uses: softprops/action-gh-release@v2
